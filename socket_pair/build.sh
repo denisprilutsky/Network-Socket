@@ -2,8 +2,8 @@
 
 clear
 
-BUILD_NAME=sockpair
+BUILD_NAME="sockpair"
 
-gcc $(pwd)/$(BUILD_NAME).c -o $(pwd)/$(BUILD_NAME)
+gcc $(pwd)/${BUILD_NAME}.c -o $(pwd)/${BUILD_NAME}
 
-./$(BUILD_NAME)
+./${BUILD_NAME}

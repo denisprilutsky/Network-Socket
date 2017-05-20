@@ -26,6 +26,7 @@ int main(int argc, char ** argv)
 		write(sockets[0], STR1, sizeof(STR1));
 		read(sockets[0], buf, sizeof(buf));
 		printf("%s\n", buf);
+		printf("!!!\n");
 		close(sockets[0]);
 	}
 	else
@@ -34,6 +35,7 @@ int main(int argc, char ** argv)
 		read(sockets[1], buf, sizeof(buf));
 		printf("%s\n", buf);
 		write(sockets[1], STR2, sizeof(STR2));
+		printf("???\n");
 		close(sockets[1]);
 	}
 }

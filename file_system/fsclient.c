@@ -10,12 +10,12 @@
 
 int main(int argc, char ** argv)
 {
-	int   sock;
+	int sock;
 	sock = socket(AF_UNIX, SOCK_DGRAM, 0);
 	char buf[BUF_SIZE];
 	struct sockaddr srvr_name;
 
-	if (sock < 0) 
+	if( sock < 0 ) 
 	{
 		perror("socket failed");
 		return EXIT_FAILURE;
@@ -23,5 +23,5 @@ int main(int argc, char ** argv)
 	srvr_name.sa_family = AF_UNIX;
 	strcpy(srvr_name.sa_data, SOCK_NAME);
 	strcpy(buf, "Hello, Unix sockets!");
-	sendto(sock, buf, strlen(buf), 0, &srvr_name, strlen(srvr_name.sa_data) + sizeof(srvr_name.sa_family));
+	sendto( sock, buf, strlen(buf), 0, &srvr_name, strlen(srvr_name.sa_data) + sizeof(srvr_name.sa_family) );
 }

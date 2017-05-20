@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <strings.h>
+#include <string.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -10,43 +10,54 @@
 
 int main(int argc, char ** argv)
 {
-	int sock, newsock, port, clen;
 	char buf[BUF_SIZE];
-	struct sockaddr_in serv_addr, cli_addr;
-	if (argc < 2) 
+
+	if( argc < 3 ) 
 	{
 		fprintf(stderr,"usage: %s <port_number>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
-	sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (socket < 0)
+	
+	int sock = socket(AF_INET /* Домен сокета - сетевой */, SOCK_STREAM /* Тип сокета - потоковый */, AF_INET);
+	if( socket < 0 )
 	{
 		printf("socket() failed: %d\n", errno);
 		return EXIT_FAILURE;
 	}
-	memset((char *) &serv_addr, 0, sizeof(serv_addr));
-	port = atoi(argv[1]);
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons(port);
-	if (bind(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+	struct sockaddr_in server_addr;
+	memset( (char *) &server_addr, 0, sizeof(server_addr) );
+	
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = inet_addr(argv[1]); //INADDR_ANY;
+	
+	int port = atoi(argv[2]);
+	server_addr.sin_port = htons(port);
+
+	if( bind( sock, (struct sockaddr *) &server_addr, sizeof(server_addr) ) < 0 )
 	{
 		printf("bind() failed: %d\n", errno);
 		return EXIT_FAILURE;
 	}
-	listen(sock, 1);
-	clen = sizeof(cli_addr);
-	newsock = accept(sock, (struct sockaddr *) &cli_addr, &clen);
-	if (newsock < 0) 
+	
+	/* Количество возможных подключений к серверу */
+	listen(sock, 5);
+
+	struct sockaddr_in cli_addr;
+	int addr_len = sizeof(cli_addr);
+	printf( "%i !!!\n", inet_addr(argv[1]) ); ///////
+	int newsock = accept( sock, (struct sockaddr *) &cli_addr, &addr_len );
+	if( newsock < 0 ) 
 	{
 		printf("accept() failed: %d\n", errno);
 		return EXIT_FAILURE;
 	}
-	memset(buf, 0, BUF_SIZE);
-	read(newsock, buf, BUF_SIZE-1);
+	printf( "%i !!!!\n", inet_addr(argv[1]) ); ///////
+	memset( buf, 0, BUF_SIZE );
+
+	read( newsock, buf, (BUF_SIZE - 1) );
 	buf[BUF_SIZE] = 0;
-	printf("MSG: %s\n", buf);
-	write(newsock, "OK", 2);
+	printf("Input Message: %s\n", buf);
+	write(newsock, "OK\n", 3);
 	close(newsock);
 	close(sock);
 }
