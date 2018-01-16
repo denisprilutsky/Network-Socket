@@ -31,3 +31,7 @@
 # Debug files
 *.dSYM/
 *.su
+/net_socket_ipv6/udp_server_project/build/
+/net_socket_ipv6/udp_server_project/dist/
+/net_socket_ipv6/udp_client_project/dist/
+/net_socket_ipv6/udp_client_project/build/
